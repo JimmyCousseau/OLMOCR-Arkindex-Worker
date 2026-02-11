@@ -1,0 +1,49 @@
+repos:
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  # Ruff version.
+  rev: v0.14.4
+  hooks:
+  # Run the linter.
+  - id: ruff-check
+    args: [ --fix, --exit-non-zero-on-fix ]
+  # Run the formatter.
+  - id: ruff-format
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v6.0.0
+  hooks:
+  - id: check-ast
+  - id: check-docstring-first
+  - id: check-executables-have-shebangs
+  - id: check-merge-conflict
+  - id: check-symlinks
+  - id: debug-statements
+  - id: trailing-whitespace
+  - id: check-yaml
+    args: [ --allow-multiple-documents ]
+  - id: mixed-line-ending
+  - id: name-tests-test
+    args: [ '--django' ]
+  - id: check-json
+  - id: check-toml
+- repo: https://github.com/codespell-project/codespell
+  rev: v2.4.1
+  hooks:
+  - id: codespell
+    args: [ '--write-changes' ]
+- repo: meta
+  hooks:
+  - id: check-useless-excludes
+- repo: https://github.com/shellcheck-py/shellcheck-py
+  rev: v0.11.0.1
+  hooks:
+  - id: shellcheck
+- repo: https://gitlab.teklia.com/tools/pre-commit-hooks
+  rev: 0.2.0
+  hooks:
+  - id: long-test-files
+    args: [ '1000' ]
+    files: '^tests\/(.*\/)?test_[^\/]*\.py$'
+- repo: https://gitlab.teklia.com/arkindex/workers/configuration
+  rev: 0.2.1
+  hooks:
+  - id: validate-worker-configuration

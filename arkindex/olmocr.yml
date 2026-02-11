@@ -1,0 +1,27 @@
+slug: olmocr
+display_name: olmocr
+type: transcription
+description: |-
+  Worker to transcribe some handwritten text
+
+  #### Configuration
+
+  ##### Elements
+
+  <!-- Describe the elements that should be passed as input to this worker. -->
+
+  The **olmocr** worker processes *folder|page|word|...* elements.
+
+  #### Workflow
+
+  <!-- Describe what the worker does with the element, in what order, to what end. -->
+
+  #### Results
+
+  <!-- Describe what the worker produces on Arkindex. It may be ML results (transcriptions, elements, entities, classifications, ...), artifacts... -->
+
+  #### Additional resources
+
+  <!-- Any external links, e.g. - [Description of website](https://www.url.com/) -->
+docker:
+  command: worker-olmocr

@@ -1,0 +1,8 @@
+{
+  "slug": "olmocr",
+  "name": "olmocr",
+  "description": "Worker to transcribe some handwritten text",
+  "worker_type": "transcription",
+  "author": "UMLP",
+  "email": "cousseau.jimmy@gmail.com"
+}

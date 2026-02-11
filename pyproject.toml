@@ -1,0 +1,73 @@
+[build-system]
+requires = ["setuptools >= 77.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "worker_olmocr"
+version = "0.1.0"
+description = "Worker to transcribe some handwritten text"
+dependencies = [
+    "arkindex-base-worker==0.5.1.post1",
+]
+authors = [
+    { name = "UMLP", email = "cousseau.jimmy@gmail.com" },
+]
+maintainers = [
+    { name = "UMLP", email = "cousseau.jimmy@gmail.com" },
+]
+requires-python = ">=3.10"
+readme = { file = "README.md", content-type = "text/markdown" }
+keywords = ["python"]
+classifiers = [
+    # Specify the Python versions you support here.
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+[project.scripts]
+"worker-olmocr" = "worker_olmocr.worker:main"
+
+[tool.setuptools.packages]
+find = {}
+
+[tool.ruff]
+exclude = [".git", "__pycache__"]
+target-version = "py312"
+
+[tool.ruff.lint]
+ignore = ["E501"]
+select = [
+    # pycodestyle
+    "E",
+    "W",
+    # Pyflakes
+    "F",
+    # Flake8 Debugger
+    "T1",
+    # Isort
+    "I",
+    # Implicit Optional
+    "RUF013",
+    # Invalid pyproject.toml
+    "RUF200",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # flake8-pytest-style
+    "PT",
+    # flake8-use-pathlib
+    "PTH",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Ignore `pytest-composite-assertion` rules of `flake8-pytest-style` linter for non-test files
+"worker_olmocr/**/*.py" = ["PT018"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["arkindex", "arkindex_worker"]
+known-third-party = ["pytest"]
