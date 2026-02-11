@@ -7,6 +7,7 @@ COPY worker_olmocr worker_olmocr
 COPY pyproject.toml ./
 RUN pip install -U pip
 RUN pip install . --no-cache-dir
+RUN pip install torch transformers olmocr
 
 # Setup unprivileged user
 RUN adduser --gid=65534 --uid=2000 --home=/home --no-create-home --shell=/bin/nologin worker
