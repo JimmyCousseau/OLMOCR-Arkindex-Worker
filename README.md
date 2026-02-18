@@ -2,6 +2,45 @@
 
 Worker to transcribe some handwritten text
 
+## Docker container
+
+### Create container
+
+To run the worker on your machine, you need first to create a docker container with this command:
+
+``` bash
+docker build --tag "olmocr_worker" .
+```
+
+### Run container
+
+Don't forget to create a .env file as below:
+
+
+``` bash
+ARKINDEX_API_URL="http://..." # The URL of your arkindex instance
+ARKINDEX_API_TOKEN="XXX"      # Token that you have generated in your arkindex profile (in the app)
+ARKINDEX_WORKER_RUN_ID="XXX"  # The worker run ID to use
+```
+
+Then, please use this command with the correspondent element ID:
+
+``` bash
+docker run --rm \
+  --env-file .env \
+  olmocr_worker \
+  worker-olmocr \
+  --element="936251ad-d5c4-4486-856f-d6cdc4a47817"
+```
+
+### Stop the container
+
+Just use this command:
+
+``` bash
+docker stop olmocr_worker
+```
+
 ## Development
 
 For development and tests purpose it may be useful to install the worker as a editable package with pip.
