@@ -26,5 +26,19 @@ COPY pyproject.toml ./
 RUN pip install -U pip
 RUN pip install --no-cache-dir $(python -c "import tomllib; f=open('pyproject.toml','rb'); deps=tomllib.load(f)['project']['dependencies']; print(' '.join(deps))")
 
+# Pre-download OLMoCR model + processor
+RUN python - <<EOF
+from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
+
+Qwen2_5_VLForConditionalGeneration.from_pretrained(
+    "allenai/olmOCR-2-7B-1025",
+    dtype=torch.bfloat16
+)
+
+AutoProcessor.from_pretrained(
+    "Qwen/Qwen2.5-VL-7B-Instruct"
+)
+EOF
+
 COPY worker_olmocr worker_olmocr
 RUN pip install . --no-cache-dir --no-deps

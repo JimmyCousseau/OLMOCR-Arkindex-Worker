@@ -106,42 +106,69 @@ class OlmocrWorker(ElementsWorker):
         self.olmocr = OLMoCRModel(device=device)
 
     def process_element(self, element: Element) -> None:
-        """
-        Arkindex appelle cette méthode pour chaque élément à traiter.
-        On ouvre l'image de l'élément directement (comme le worker Tesseract),
-        on lance l'OCR, puis on publie la transcription via le helper du worker.
-        """
         logger.info(f"OLMoCR: traitement element {element.id}")
 
-        image = element.open_image()
+        # récupérer les lignes enfants
+        lines = list(element.get_children(type="line"))
 
-        if image is None:
-            logger.info(f"Aucune image disponible pour l'élément {element.id}, skip.")
-            return
+        if lines:
+            logger.info(f"{len(lines)} lignes détectées pour {element.id}")
 
-        if image.mode != "RGB":
-            image = image.convert("RGB")
+            for line in lines:
+                image = line.open_image()
 
-        logger.info(f"Lancement OCR sur element {element.id} ({image.size})")
+                if image is None:
+                    continue
 
-        result = self.olmocr.predict(image, max_tokens=512)
-        text = result["text"]
+                if image.mode != "RGB":
+                    image = image.convert("RGB")
 
-        if not text.strip():
-            logger.info(f"OCR vide pour element {element.id}")
-            return
+                result = self.olmocr.predict(image, max_tokens=256)
+                text = result["text"]
 
-        logger.info(f"OCR OK element {element.id}: {text[:200]}...")
+                if not text.strip():
+                    continue
 
-        self.create_element_transcriptions(
-            element,
-            sub_element_type=element.type,
-            transcriptions=[
-                {"text": text, "polygon": element.polygon, "confidence": 0.5}
-            ],
-        )
+                self.create_element_transcriptions(
+                    line,
+                    sub_element_type=line.type,
+                    transcriptions=[
+                        {
+                            "text": text,
+                            "polygon": line.polygon,
+                            "confidence": 0.5,
+                        }
+                    ],
+                )
 
-        logger.info(f"OLMoCR terminé pour element {element.id}")
+        else:
+            logger.info("Aucune ligne détectée, OCR page complète")
+
+            image = element.open_image()
+
+            if image is None:
+                return
+
+            if image.mode != "RGB":
+                image = image.convert("RGB")
+
+            result = self.olmocr.predict(image, max_tokens=512)
+            text = result["text"]
+
+            if not text.strip():
+                return
+
+            self.create_element_transcriptions(
+                element,
+                sub_element_type=element.type,
+                transcriptions=[
+                    {
+                        "text": text,
+                        "polygon": element.polygon,
+                        "confidence": 0.5,
+                    }
+                ],
+            )
 
 
 def main() -> None:
